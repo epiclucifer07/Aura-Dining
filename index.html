@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
-    <!-- Appwrite Web SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .font-serif-title { font-family: 'Playfair Display', serif; }
@@ -117,28 +115,27 @@
 
     </div>
 
-    <!-- Appwrite Direct Google Sign-In Script -->
+    <!-- JavaScript Handlers -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const { Client, Account } = window.Appwrite;
-
-            // Initialize Appwrite Client
-            const client = new Client();
-            client
-                .setEndpoint('https://cloud.appwrite.io/v1') // Replace with your Appwrite Endpoint if self-hosted
-                .setProject('YOUR_PROJECT_ID');              // Replace with your Appwrite Project ID
-
-            const account = new Account(client);
-
             const googleBtn = document.getElementById('google-btn');
+            const microsoftBtn = document.getElementById('microsoft-btn');
+
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => {
-                    // Trigger Google OAuth 2.0 session
-                    account.createOAuth2Session(
-                        'google',
-                        window.location.origin + '/dashboard.html', // Redirect URL on Success
-                        window.location.href                       // Redirect URL on Failure
-                    );
+                    sessionStorage.setItem('user_provider', 'Google');
+                    sessionStorage.setItem('user_name', 'Alex Johnson');
+                    sessionStorage.setItem('user_email', 'alex.j@gmail.com');
+                    window.location.href = 'dashboard.html';
+                });
+            }
+
+            if (microsoftBtn) {
+                microsoftBtn.addEventListener('click', () => {
+                    sessionStorage.setItem('user_provider', 'Microsoft');
+                    sessionStorage.setItem('user_name', 'Sarah Parker');
+                    sessionStorage.setItem('user_email', 'sarah.p@outlook.com');
+                    window.location.href = 'dashboard.html';
                 });
             }
         });
