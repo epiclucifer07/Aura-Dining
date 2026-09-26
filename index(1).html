@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | Aura Dining</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-serif-title { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen text-slate-800 antialiased">
+
+    <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+        
+        <!-- Left 50%: Visual Food Showcase -->
+        <div class="relative hidden lg:flex flex-col justify-between p-12 bg-cover bg-center overflow-hidden" 
+             style="background-image: linear-gradient(to bottom, rgba(15,23,42,0.35), rgba(15,23,42,0.85)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1600&q=80');">
+            
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 z-10">
+                <div class="w-10 h-10 rounded-2xl bg-rose-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-rose-600/40">
+                    A
+                </div>
+                <span class="font-serif-title text-2xl font-black text-white tracking-tight">AURA <span class="text-rose-500 font-sans text-xs uppercase font-bold tracking-widest block">Dining & Gourmet</span></span>
+            </div>
+
+            <!-- Content Banner -->
+            <div class="z-10 space-y-6 max-w-lg">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-amber-300 border border-white/20 px-3.5 py-1.5 rounded-full text-xs font-semibold">
+                    <i class="fa-solid fa-star"></i> World-Class Gastronomy
+                </div>
+                
+                <h2 class="font-serif-title text-4xl xl:text-5xl font-bold text-white leading-tight">
+                    Taste the world's finest culinary creations.
+                </h2>
+
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    Access exclusive reservations, place gourmet orders, and track your dining experience seamlessly.
+                </p>
+
+                <!-- Social Proof -->
+                <div class="pt-4 border-t border-white/10 flex items-center gap-4 text-white">
+                    <div class="flex -space-x-2">
+                        <img class="inline-block h-8 w-8 rounded-full ring-2 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
+                        <img class="inline-block h-8 w-8 rounded-full ring-2 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="User">
+                        <img class="inline-block h-8 w-8 rounded-full ring-2 ring-slate-900 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="User">
+                    </div>
+                    <div class="text-xs">
+                        <span class="font-bold text-white block">Over 50,000+ Foodies</span>
+                        <span class="text-slate-400">Enjoying premium dining daily</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80 pointer-events-none"></div>
+        </div>
+
+        <!-- Right 50%: Sign-In Actions -->
+        <div class="flex items-center justify-center p-6 sm:p-12 lg:p-16 bg-white">
+            <div class="max-w-md w-full space-y-8">
+                
+                <!-- Mobile Logo Header -->
+                <div class="flex lg:hidden items-center gap-3 justify-center mb-6">
+                    <div class="w-10 h-10 rounded-2xl bg-rose-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-rose-600/30">
+                        A
+                    </div>
+                    <span class="font-serif-title text-2xl font-black text-slate-900">AURA</span>
+                </div>
+
+                <div class="space-y-2 text-center lg:text-left">
+                    <h1 class="font-serif-title text-3xl font-bold text-slate-900">Sign in to Aura</h1>
+                    <p class="text-sm text-slate-500 font-medium">Select your preferred account to continue</p>
+                </div>
+
+                <!-- Sign-In Action Buttons -->
+                <div class="space-y-4">
+                    
+                    <!-- Google Button -->
+                    <button id="google-btn" type="button" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3.5 px-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow transition-all duration-200 text-sm group cursor-pointer">
+                        <svg class="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+
+                    <!-- Microsoft Button -->
+                    <button id="microsoft-btn" type="button" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3.5 px-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow transition-all duration-200 text-sm group cursor-pointer">
+                        <svg class="w-5 h-5 transition-transform group-hover:scale-110" viewBox="0 0 23 23">
+                            <path fill="#f35325" d="M1 1h10v10H1z"/>
+                            <path fill="#81bc06" d="M12 1h10v10H12z"/>
+                            <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+                            <path fill="#ffba08" d="M12 12h10v10H12z"/>
+                        </svg>
+                        Continue with Microsoft
+                    </button>
+
+                </div>
+
+                <p class="text-center text-xs text-slate-400 leading-relaxed pt-4">
+                    By signing in, you agree to our <a href="#" class="text-rose-600 font-semibold hover:underline">Terms</a> & <a href="#" class="text-rose-600 font-semibold hover:underline">Privacy Policy</a>.
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Real Firebase Authentication -->
+    <script type="module" src="sign.js"></script>
+
+</body>
+</html>
