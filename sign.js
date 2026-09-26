@@ -1,16 +1,14 @@
 // ==========================================
-// AURA DINING - FIREBASE SIGN IN
+// AURA DINING - REAL FIREBASE SIGN IN
 // ==========================================
 
-// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
 
 import {
     getAuth,
     GoogleAuthProvider,
     OAuthProvider,
-    signInWithPopup,
-    onAuthStateChanged
+    signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
 
@@ -38,18 +36,19 @@ const auth = getAuth(app);
 
 
 // ==========================================
-// GOOGLE PROVIDER
+// GOOGLE
 // ==========================================
 
 const googleProvider = new GoogleAuthProvider();
 
+// ALWAYS show Google account chooser
 googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 
 
 // ==========================================
-// MICROSOFT PROVIDER
+// MICROSOFT
 // ==========================================
 
 const microsoftProvider = new OAuthProvider("microsoft.com");
@@ -64,89 +63,60 @@ const microsoftButton = document.getElementById("microsoft-btn");
 
 
 // ==========================================
-// SHOW ERROR MESSAGE
+// ERROR MESSAGE
 // ==========================================
 
-function showError(message) {
-    alert(message);
-}
+function showError(error) {
 
-
-// ==========================================
-// BUTTON LOADING STATE
-// ==========================================
-
-function setButtonLoading(button, loading, originalText) {
-
-    if (!button) return;
-
-    button.disabled = loading;
-
-    if (loading) {
-        button.dataset.originalText = originalText || button.textContent;
-        button.textContent = "Signing in...";
-    } else {
-        button.textContent =
-            button.dataset.originalText || originalText || button.textContent;
-
-        delete button.dataset.originalText;
-    }
-}
-
-
-// ==========================================
-// FIREBASE ERROR HANDLER
-// ==========================================
-
-function getErrorMessage(error) {
+    console.error("Firebase Error:", error);
 
     switch (error.code) {
 
         case "auth/popup-closed-by-user":
-            return "The sign-in window was closed. Please try again.";
+            alert("Sign-in cancelled.");
+            break;
 
         case "auth/popup-blocked":
-            return "Your browser blocked the sign-in popup. Please allow popups for this website.";
-
-        case "auth/cancelled-popup-request":
-            return "Another sign-in window is already open.";
-
-        case "auth/network-request-failed":
-            return "Network error. Please check your internet connection.";
+            alert("Your browser blocked the sign-in popup. Please allow popups for this website.");
+            break;
 
         case "auth/unauthorized-domain":
-            return "This website is not authorized in Firebase. Add your website domain to Firebase Authorized Domains.";
+            alert("This website is not authorized in Firebase. Add your website domain in Firebase Authorized Domains.");
+            break;
 
         case "auth/operation-not-allowed":
-            return "This sign-in method is not enabled in Firebase.";
+            alert("This sign-in method is not enabled in Firebase.");
+            break;
 
-        case "auth/account-exists-with-different-credential":
-            return "An account already exists with this email using another sign-in method.";
-
-        case "auth/user-disabled":
-            return "This account has been disabled.";
+        case "auth/network-request-failed":
+            alert("Internet connection problem. Please try again.");
+            break;
 
         default:
-            return error.message || "Sign-in failed. Please try again.";
+            alert("Sign-in failed: " + error.message);
     }
 }
 
 
 // ==========================================
-// GOOGLE SIGN IN
+// GOOGLE LOGIN
 // ==========================================
 
-async function signInWithGoogle() {
+async function googleLogin() {
 
-    if (!googleButton) return;
+    if (!googleButton) {
+        console.error("Google button not found.");
+        return;
+    }
 
-    setButtonLoading(
-        googleButton,
-        true,
-        "Continue with Google"
-    );
+    const oldText = googleButton.textContent;
+
+    googleButton.disabled = true;
+    googleButton.textContent = "Connecting...";
 
     try {
+
+        console.log("Opening Google sign-in...");
 
         const result = await signInWithPopup(
             auth,
@@ -155,9 +125,9 @@ async function signInWithGoogle() {
 
         const user = result.user;
 
-        console.log("Google login successful:", user);
+        console.log("Google user:", user);
 
-        // Save basic user information
+        // Store user information
         sessionStorage.setItem(
             "user_name",
             user.displayName || "User"
@@ -173,39 +143,38 @@ async function signInWithGoogle() {
             "Google"
         );
 
-        // Go to dashboard
-        window.location.replace("dashboard.html");
+        // Login successful
+        window.location.href = "dashboard.html";
 
     } catch (error) {
 
-        console.error("Google Sign-In Error:", error);
+        showError(error);
 
-        showError(getErrorMessage(error));
-
-        setButtonLoading(
-            googleButton,
-            false,
-            "Continue with Google"
-        );
+        googleButton.disabled = false;
+        googleButton.textContent = oldText;
     }
 }
 
 
 // ==========================================
-// MICROSOFT SIGN IN
+// MICROSOFT LOGIN
 // ==========================================
 
-async function signInWithMicrosoft() {
+async function microsoftLogin() {
 
-    if (!microsoftButton) return;
+    if (!microsoftButton) {
+        console.error("Microsoft button not found.");
+        return;
+    }
 
-    setButtonLoading(
-        microsoftButton,
-        true,
-        "Continue with Microsoft"
-    );
+    const oldText = microsoftButton.textContent;
+
+    microsoftButton.disabled = true;
+    microsoftButton.textContent = "Connecting...";
 
     try {
+
+        console.log("Opening Microsoft sign-in...");
 
         const result = await signInWithPopup(
             auth,
@@ -214,9 +183,9 @@ async function signInWithMicrosoft() {
 
         const user = result.user;
 
-        console.log("Microsoft login successful:", user);
+        console.log("Microsoft user:", user);
 
-        // Save basic user information
+        // Store user information
         sessionStorage.setItem(
             "user_name",
             user.displayName || "User"
@@ -232,74 +201,43 @@ async function signInWithMicrosoft() {
             "Microsoft"
         );
 
-        // Go to dashboard
-        window.location.replace("dashboard.html");
+        // Login successful
+        window.location.href = "dashboard.html";
 
     } catch (error) {
 
-        console.error(
-            "Microsoft Sign-In Error:",
-            error
-        );
+        showError(error);
 
-        showError(getErrorMessage(error));
-
-        setButtonLoading(
-            microsoftButton,
-            false,
-            "Continue with Microsoft"
-        );
+        microsoftButton.disabled = false;
+        microsoftButton.textContent = oldText;
     }
 }
 
 
 // ==========================================
-// BUTTON EVENTS
+// BUTTON CLICK EVENTS
 // ==========================================
 
 if (googleButton) {
-
     googleButton.addEventListener(
         "click",
-        signInWithGoogle
+        googleLogin
     );
-
 }
-
 
 if (microsoftButton) {
-
     microsoftButton.addEventListener(
         "click",
-        signInWithMicrosoft
+        microsoftLogin
     );
-
 }
 
 
 // ==========================================
-// CHECK EXISTING LOGIN
+// IMPORTANT
 // ==========================================
-
-onAuthStateChanged(auth, (user) => {
-
-    if (user) {
-
-        console.log(
-            "User already signed in:",
-            user.email
-        );
-
-        // If already logged in, go directly
-        // to the dashboard.
-
-        // Small delay prevents redirect problems
-        // while the page is loading.
-
-        setTimeout(() => {
-            window.location.replace("dashboard.html");
-        }, 300);
-
-    }
-
-});
+//
+// There is NO onAuthStateChanged redirect here.
+//
+// The user must actually click a sign-in button.
+// ==========================================
