@@ -204,7 +204,7 @@ async function checkRedirectLogin() {
             // Go to dashboard
 
             window.location.replace(
-                "dashboard.html"
+                "dashboard(1).html"
             );
         }
 
