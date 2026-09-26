@@ -1,5 +1,5 @@
 // ==========================================
-// AURA DINING - REAL FIREBASE SIGN IN
+// AURA DINING - GOOGLE STYLE SIGN IN
 // ==========================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
@@ -8,7 +8,8 @@ import {
     getAuth,
     GoogleAuthProvider,
     OAuthProvider,
-    signInWithPopup
+    signInWithRedirect,
+    getRedirectResult
 } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
 
@@ -36,19 +37,18 @@ const auth = getAuth(app);
 
 
 // ==========================================
-// GOOGLE
+// GOOGLE PROVIDER
 // ==========================================
 
 const googleProvider = new GoogleAuthProvider();
 
-// ALWAYS show Google account chooser
 googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 
 
 // ==========================================
-// MICROSOFT
+// MICROSOFT PROVIDER
 // ==========================================
 
 const microsoftProvider = new OAuthProvider("microsoft.com");
@@ -63,181 +63,168 @@ const microsoftButton = document.getElementById("microsoft-btn");
 
 
 // ==========================================
-// ERROR MESSAGE
-// ==========================================
-
-function showError(error) {
-
-    console.error("Firebase Error:", error);
-
-    switch (error.code) {
-
-        case "auth/popup-closed-by-user":
-            alert("Sign-in cancelled.");
-            break;
-
-        case "auth/popup-blocked":
-            alert("Your browser blocked the sign-in popup. Please allow popups for this website.");
-            break;
-
-        case "auth/unauthorized-domain":
-            alert("This website is not authorized in Firebase. Add your website domain in Firebase Authorized Domains.");
-            break;
-
-        case "auth/operation-not-allowed":
-            alert("This sign-in method is not enabled in Firebase.");
-            break;
-
-        case "auth/network-request-failed":
-            alert("Internet connection problem. Please try again.");
-            break;
-
-        default:
-            alert("Sign-in failed: " + error.message);
-    }
-}
-
-
-// ==========================================
-// GOOGLE LOGIN
+// GOOGLE SIGN IN
 // ==========================================
 
 async function googleLogin() {
 
-    if (!googleButton) {
-        console.error("Google button not found.");
-        return;
-    }
-
-    const oldText = googleButton.textContent;
+    if (!googleButton) return;
 
     googleButton.disabled = true;
-    googleButton.textContent = "Connecting...";
+
+    const originalText = googleButton.innerHTML;
+
+    googleButton.innerHTML = "Connecting to Google...";
 
     try {
 
-        console.log("Opening Google sign-in...");
-
-        const result = await signInWithPopup(
+        await signInWithRedirect(
             auth,
             googleProvider
         );
 
-        const user = result.user;
-
-        console.log("Google user:", user);
-
-        // Store user information
-        sessionStorage.setItem(
-            "user_name",
-            user.displayName || "User"
-        );
-
-        sessionStorage.setItem(
-            "user_email",
-            user.email || ""
-        );
-
-        sessionStorage.setItem(
-            "user_provider",
-            "Google"
-        );
-
-        // Login successful
-        window.location.href = "dashboard.html";
-
     } catch (error) {
 
-        showError(error);
+        console.error("Google Sign-In Error:", error);
 
         googleButton.disabled = false;
-        googleButton.textContent = oldText;
+        googleButton.innerHTML = originalText;
+
+        alert(
+            "Google sign-in failed.\n\n" +
+            error.message
+        );
     }
 }
 
 
 // ==========================================
-// MICROSOFT LOGIN
+// MICROSOFT SIGN IN
 // ==========================================
 
 async function microsoftLogin() {
 
-    if (!microsoftButton) {
-        console.error("Microsoft button not found.");
-        return;
-    }
-
-    const oldText = microsoftButton.textContent;
+    if (!microsoftButton) return;
 
     microsoftButton.disabled = true;
-    microsoftButton.textContent = "Connecting...";
+
+    const originalText = microsoftButton.innerHTML;
+
+    microsoftButton.innerHTML = "Connecting to Microsoft...";
 
     try {
 
-        console.log("Opening Microsoft sign-in...");
-
-        const result = await signInWithPopup(
+        await signInWithRedirect(
             auth,
             microsoftProvider
         );
 
-        const user = result.user;
-
-        console.log("Microsoft user:", user);
-
-        // Store user information
-        sessionStorage.setItem(
-            "user_name",
-            user.displayName || "User"
-        );
-
-        sessionStorage.setItem(
-            "user_email",
-            user.email || ""
-        );
-
-        sessionStorage.setItem(
-            "user_provider",
-            "Microsoft"
-        );
-
-        // Login successful
-        window.location.href = "dashboard.html";
-
     } catch (error) {
 
-        showError(error);
+        console.error("Microsoft Sign-In Error:", error);
 
         microsoftButton.disabled = false;
-        microsoftButton.textContent = oldText;
+        microsoftButton.innerHTML = originalText;
+
+        alert(
+            "Microsoft sign-in failed.\n\n" +
+            error.message
+        );
     }
 }
 
 
 // ==========================================
-// BUTTON CLICK EVENTS
+// BUTTON EVENTS
 // ==========================================
 
 if (googleButton) {
+
     googleButton.addEventListener(
         "click",
         googleLogin
     );
+
 }
 
+
 if (microsoftButton) {
+
     microsoftButton.addEventListener(
         "click",
         microsoftLogin
     );
+
 }
 
 
 // ==========================================
-// IMPORTANT
+// HANDLE RETURN FROM GOOGLE
 // ==========================================
-//
-// There is NO onAuthStateChanged redirect here.
-//
-// The user must actually click a sign-in button.
+
+async function checkRedirectLogin() {
+
+    try {
+
+        const result = await getRedirectResult(auth);
+
+        if (result && result.user) {
+
+            const user = result.user;
+
+            console.log(
+                "Google login successful:",
+                user
+            );
+
+
+            // Save actual user information
+
+            sessionStorage.setItem(
+                "user_name",
+                user.displayName || "User"
+            );
+
+            sessionStorage.setItem(
+                "user_email",
+                user.email || ""
+            );
+
+            sessionStorage.setItem(
+                "user_photo",
+                user.photoURL || ""
+            );
+
+            sessionStorage.setItem(
+                "user_provider",
+                "Google"
+            );
+
+
+            // Go to dashboard
+
+            window.location.replace(
+                "dashboard.html"
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Redirect Sign-In Error:",
+            error
+        );
+
+        alert(
+            "Google sign-in failed.\n\n" +
+            error.message
+        );
+    }
+}
+
+
 // ==========================================
+// START REDIRECT CHECK
+// ==========================================
+
+checkRedirectLogin();
